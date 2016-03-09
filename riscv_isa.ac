@@ -1,0 +1,30 @@
+
+AC_ISA(riscv){
+
+  ac_format Type_R  = "%funct7:7 %rs2:5 %rs1:5 %funct3:3 %rd:5 %op:7";
+  ac_format Type_I  = "%imm:12 %rs1:5 %funct3:3 %rd:5 %op:7";
+  ac_format Type_S  = "%imm1:7 %rs2:5 %rs1:5 %funct3:3 %imm2:5 %op:7";
+  ac_format Type_U  = "%imm:20 %rd:5 %op:7";
+
+  ac_instr<Type_R> add;//sub, sll, slt, sltu, xor, srl, sra, or, and;
+  ac_instr<Type_I> addi;//, slti, sltiu, xori, ori, andi, slli, srli, srai;
+  //ac_instr<Type_S> beq, bne, blt, bge, bltu, bgeu;
+  //ac_instr<Type_U> lui, auipc;
+
+  //RISCV specific register names
+    ac_asm_map reg {
+       "$"[0..31] = [0..31];
+       "$zero" = 0;
+    }
+
+  ISA_CTOR(riscv){
+
+    add.set_asm("add %reg, %reg, %reg", rd, rs1, rs2);
+    add.set_decoder(funct7=0x00, funct3=0x00, op=0x33);
+
+    addi.set_asm("addi %reg, %reg, %imm", rd, rs1, imm);
+    addi.set_decoder(funct3=0x00, op=0x13);
+
+  };
+
+};
